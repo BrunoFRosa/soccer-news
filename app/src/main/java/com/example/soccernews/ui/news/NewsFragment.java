@@ -14,20 +14,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.soccernews.databinding.FragmentNewsBinding;
 import com.example.soccernews.ui.adapter.NewsAdapter;
 
+import java.util.ArrayList;
+
 public class NewsFragment extends Fragment {
 
     private FragmentNewsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        NewsViewModel NewsViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
+        NewsViewModel newsViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
 
         binding = FragmentNewsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
+        binding.rvNews.setAdapter(new NewsAdapter(new ArrayList()));
         binding.rvNews.setLayoutManager(new LinearLayoutManager(getContext()));
-        NewsViewModel.getNews().observe(getViewLifecycleOwner(), news ->{
+        newsViewModel.getNews().observe(getViewLifecycleOwner(), news -> {
             binding.rvNews.setAdapter(new NewsAdapter(news));
-
         });
         return root;
     }
