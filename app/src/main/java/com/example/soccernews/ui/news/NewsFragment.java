@@ -4,17 +4,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.soccernews.MainActivity;
 import com.example.soccernews.databinding.FragmentNewsBinding;
 import com.example.soccernews.ui.adapter.NewsAdapter;
-
-import java.util.ArrayList;
 
 public class NewsFragment extends Fragment {
 
@@ -25,11 +23,33 @@ public class NewsFragment extends Fragment {
 
         binding = FragmentNewsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        binding.rvNews.setAdapter(new NewsAdapter(new ArrayList()));
+
+
+
         binding.rvNews.setLayoutManager(new LinearLayoutManager(getContext()));
         newsViewModel.getNews().observe(getViewLifecycleOwner(), news -> {
-            binding.rvNews.setAdapter(new NewsAdapter(news));
+            binding.rvNews.setAdapter(new NewsAdapter(news, updatedNews-> {
+                MainActivity activity = (MainActivity) getActivity();
+                if (activity != null) {
+                    activity.getDb().newsDao().save(updatedNews);
+                }
+
+            }));
         });
+
+
+        newsViewModel.getState().observe(getViewLifecycleOwner(), state -> {
+            switch (state){
+                case DOING:
+                    break;
+                case DONE:
+                    break;
+                case ERROR:
+
+            }
+        });
+
+
         return root;
     }
 
